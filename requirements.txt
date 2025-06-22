@@ -1,0 +1,7 @@
+mysql-connector-python
+tk
+fpdf
+cryptography
+python-dotenv
+pytest
+pillow
