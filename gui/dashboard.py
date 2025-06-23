@@ -1,7 +1,9 @@
 import tkinter as tk
 
 class Dashboard:
-    def __init__(self):
+    def __init__(self, db):
+        self.__db = db
+
         self.root = tk.Tk()
         self.root.title("Client Manager")
 

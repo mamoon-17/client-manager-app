@@ -3,7 +3,8 @@ from db.db_config import DB
 
 if __name__ == "__main__":
 
-    database = DB()
+    db = DB()
+    connection = db.get_connection()
 
-    app = Dashboard()
+    app = Dashboard(db)
     app.run()
