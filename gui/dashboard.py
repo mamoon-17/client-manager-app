@@ -41,7 +41,7 @@ class Dashboard:
         screen_width = self.__root.winfo_screenwidth()
         screen_height = self.__root.winfo_screenheight() - 70
         self.__root.geometry(f"{screen_width}x{screen_height}")
-        self.__root.minsize(800, 600)
+        self.__root.minsize(1024, 700)
         self.__root.resizable(True, True)
 
         self.__root.rowconfigure(0, weight=1)
@@ -166,6 +166,27 @@ class Dashboard:
         self.__totalClients_frame.grid_propagate(False)
         self.__totalClients_frame.columnconfigure(0, weight=1)
         self.__totalClients_frame.rowconfigure(0, weight=1)
+        self.totalClientsLabel()
+
+    def totalClientsLabel(self):
+        self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=28)
+        totalClients_Label = ctk.CTkLabel(
+        self.__totalClients_frame,
+        text="Total Clients",
+        font=self.__labelsemi_bold_font,
+        text_color="white",               # Valid for CTkLabel
+        height=150
+        )
+        totalClients_Label.grid(row=0, column=0, sticky="nw", padx=60, pady=(20, 0))
+
+        totalClients_Value = ctk.CTkLabel(
+        self.__totalClients_frame,
+        text="146",  # Dynamic value can go here
+        font=ctk.CTkFont(size=32, weight="bold"),  # You can tweak font
+        text_color="white"
+        )
+        totalClients_Value.grid(row=1, column=0, sticky="nw", padx=60, pady=(0, 50))
+
 
     def initTotalInvoicesFrame(self):
         self.__totalInvoices_frame = ctk.CTkFrame(
