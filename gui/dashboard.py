@@ -1,14 +1,14 @@
 import customtkinter as ctk
 from customtkinter import CTkFont
 
-class Dashboard:
-    def __init__(self, db):
-        self.__db = db
+class Dashboard(ctk.CTkFrame):
+    def __init__(self, root, db):
+        super().__init__(root)
 
+        self.__db = db
         # Pre-declare frames (safe access)
-        self.__root = None
+        self.__root = root
         self.__main_frame = None
-        self.__sidebar_frame = None
         self.__top_frame = None
         self.__middle_frame = None
         self.__bottom_frame = None
@@ -21,108 +21,14 @@ class Dashboard:
         self.__addPayment_frame = None
 
         # Colors
-        self.__SIDEBAR_COLOR = "#303338"
         self.__WIDGET_COLOR = "#303339"
         self.__FRAME_COLOR = "#23262b"
         self.__temp_color = "#747679"
         
         self.__semi_bold_font = None
 
-        # Appearance
-        ctk.set_appearance_mode("dark")
-        ctk.set_default_color_theme("dark-blue")
-
-        # Root window
-        self.__root = ctk.CTk()
-        self.__root.title("Client Manager")
-        
-        self.__root.state("zoomed")
-
-        screen_width = self.__root.winfo_screenwidth()
-        screen_height = self.__root.winfo_screenheight() - 70
-        self.__root.geometry(f"{screen_width}x{screen_height}")
-        self.__root.minsize(1024, 700)
-        self.__root.resizable(True, True)
-
-        self.__root.rowconfigure(0, weight=1)
-        self.__root.columnconfigure(0, weight=0)
-        self.__root.columnconfigure(1, weight=1)
-
         # Init layout
-        self.initSidebar()
         self.initMainframe()
-
-    def initSidebar(self):
-        self.__sidebar_frame = ctk.CTkFrame(
-            self.__root, fg_color=self.__SIDEBAR_COLOR, corner_radius=0, width=294
-        )
-        self.__sidebar_frame.grid(row=0, column=0, sticky="ns")
-        self.__sidebar_frame.grid_propagate(False)
-
-        self.__sidebar_frame.columnconfigure(0, weight=1)
-        self.DashboardButton()
-        self.ClientButton()
-        self.InvoiceButton()
-        self.PaymentButton()
-
-
-    def DashboardButton(self):
-        self.__semi_bold_font = CTkFont(family="Raleway SemiBold", size=24)
-
-        dashboard_Button = ctk.CTkButton(
-        self.__sidebar_frame,
-        text="Dashboard",
-        font=self.__semi_bold_font,
-        fg_color=self.__SIDEBAR_COLOR,            # Button background
-        text_color="white",          # Text color
-        hover_color="#3b4147",       # Optional: hover effect
-        corner_radius=10,
-        height=60,
-        width=210
-        )
-        dashboard_Button.grid(row=0, column=0, sticky="n", padx=10, pady=(50, 10))
-
-    def ClientButton(self):
-        dashboard_Button = ctk.CTkButton(
-        self.__sidebar_frame,
-        text="Clients",
-        font=self.__semi_bold_font,
-        fg_color=self.__SIDEBAR_COLOR,            # Button background
-        text_color="white",          # Text color
-        hover_color="#3b4147",       # Optional: hover effect
-        corner_radius=10,
-        height=60,
-        width=210
-        )
-        dashboard_Button.grid(row=1, column=0, sticky="n", padx=10, pady=10)
-
-    def InvoiceButton(self):
-        dashboard_Button = ctk.CTkButton(
-        self.__sidebar_frame,
-        text="Invoices",
-        font=self.__semi_bold_font,
-        fg_color=self.__SIDEBAR_COLOR,            # Button background
-        text_color="white",          # Text color
-        hover_color="#3b4147",       # Optional: hover effect
-        corner_radius=10,
-        height=60,
-        width=210
-        )
-        dashboard_Button.grid(row=3, column=0, sticky="n", padx=10, pady=10)
-
-    def PaymentButton(self):
-        dashboard_Button = ctk.CTkButton(
-        self.__sidebar_frame,
-        text="Payments",
-        font=self.__semi_bold_font,
-        fg_color=self.__SIDEBAR_COLOR,            # Button background
-        text_color="white",          # Text color
-        hover_color="#3b4147",       # Optional: hover effect
-        corner_radius=10,
-        height=60,
-        width=210
-        )
-        dashboard_Button.grid(row=4, column=0, sticky="n", padx=10, pady=10)
 
     def initMainframe(self):
         self.__main_frame = ctk.CTkFrame(
@@ -296,6 +202,3 @@ class Dashboard:
         self.__addPayment_frame.grid_propagate(False)
         self.__addPayment_frame.rowconfigure(0, weight=1)
         self.__addPayment_frame.columnconfigure(2, weight=1)
-
-    def run(self):
-        self.__root.mainloop()
