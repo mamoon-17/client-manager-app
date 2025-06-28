@@ -6,6 +6,9 @@ class Root:
         self.__root = None
         self.__sidebar_frame = None
 
+        self.__SIDEBAR_COLOR = "#303338"
+        self.__semi_bold_font = None
+
         # Appearance
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("dark-blue")
@@ -25,9 +28,6 @@ class Root:
         self.__root.rowconfigure(0, weight=1)
         self.__root.columnconfigure(0, weight=0)
         self.__root.columnconfigure(1, weight=1)
-
-        self.__SIDEBAR_COLOR = "#303338"
-        self.__semi_bold_font = None
 
         # Initialize
         self.initSidebar()
@@ -57,7 +57,8 @@ class Root:
         hover_color="#3b4147",       # Optional: hover effect
         corner_radius=10,
         height=60,
-        width=210
+        width=210,
+        command=self.on_dashboard_click
         )
         dashboard_Button.grid(row=0, column=0, sticky="n", padx=10, pady=(50, 10))
 
