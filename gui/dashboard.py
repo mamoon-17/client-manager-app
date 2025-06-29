@@ -8,7 +8,6 @@ class Dashboard(ctk.CTkFrame):
         self.__db = db
         # Pre-declare frames (safe access)
         self.__root = root
-        self.__main_frame = None
         self.__top_frame = None
         self.__middle_frame = None
         self.__bottom_frame = None
@@ -28,27 +27,23 @@ class Dashboard(ctk.CTkFrame):
         self.__semi_bold_font = None
 
         # Init layout
-        self.initMainframe()
-
-    def initMainframe(self):
-        self.__main_frame = ctk.CTkFrame(
-            self.__root, fg_color=self.__FRAME_COLOR, corner_radius=0
-        )
-        self.__main_frame.grid(row=0, column=1, sticky="nsew")
+        self.grid(row=0, column=1, sticky="nsew")
 
         # Allow vertical resizing
-        self.__main_frame.rowconfigure(0, weight=1)
-        self.__main_frame.rowconfigure(1, weight=1)
-        self.__main_frame.rowconfigure(2, weight=1)
-        self.__main_frame.columnconfigure(0, weight=1)
+        self.configure(fg_color=self.__FRAME_COLOR, corner_radius=0)
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
+        self.rowconfigure(2, weight=1)
+        self.columnconfigure(0, weight=1)
 
         self.initTopframe()
         self.initMiddleframe()
         self.initBottomframe()
 
+
     def initTopframe(self):
         self.__top_frame = ctk.CTkFrame(
-            self.__main_frame, fg_color=self.__FRAME_COLOR, corner_radius=15
+            self, fg_color=self.__FRAME_COLOR, corner_radius=15
         )
         self.__top_frame.grid(row=0, column=0, sticky="nsew", padx=20, pady=(20, 10))
         self.__top_frame.grid_propagate(False)
@@ -110,7 +105,7 @@ class Dashboard(ctk.CTkFrame):
 
     def initMiddleframe(self):
         self.__middle_frame = ctk.CTkFrame(
-            self.__main_frame, fg_color=self.__FRAME_COLOR, corner_radius=15
+            self, fg_color=self.__FRAME_COLOR, corner_radius=15
         )
         self.__middle_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=10)
         self.__middle_frame.grid_propagate(False)
@@ -150,7 +145,7 @@ class Dashboard(ctk.CTkFrame):
 
     def initBottomframe(self):
         self.__bottom_frame = ctk.CTkFrame(
-            self.__main_frame, fg_color=self.__FRAME_COLOR, corner_radius=15
+            self, fg_color=self.__FRAME_COLOR, corner_radius=15
         )
         self.__bottom_frame.grid(row=2, column=0, sticky="nsew", padx=20, pady=(10, 20))
         self.__bottom_frame.grid_propagate(False)
