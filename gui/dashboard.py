@@ -70,7 +70,7 @@ class Dashboard(ctk.CTkFrame):
         self.totalClientsLabel()
 
     def totalClientsLabel(self):
-        self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=28)
+        self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=32)
         totalClients_Label = ctk.CTkLabel(
         self.__totalClients_frame,
         text="Total Clients",
@@ -78,12 +78,12 @@ class Dashboard(ctk.CTkFrame):
         text_color="white",               # Valid for CTkLabel
         height=150
         )
-        totalClients_Label.grid(row=0, column=0, sticky="nw", padx=60, pady=(20, 0))
+        totalClients_Label.grid(row=0, column=0, sticky="nw", padx=60, pady=(20, 0))    
 
         totalClients_Value = ctk.CTkLabel(
         self.__totalClients_frame,
         text="146",  # Dynamic value can go here
-        font=ctk.CTkFont(size=32, weight="bold"),  # You can tweak font
+        font=ctk.CTkFont(size=45, weight="bold"),  # You can tweak font
         text_color="white"
         )
         totalClients_Value.grid(row=1, column=0, sticky="nw", padx=60, pady=(0, 50))

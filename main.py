@@ -10,6 +10,6 @@ if __name__ == "__main__":
     controller = PageManager(root.get_root(), db)
 
     root.inject_controller(controller)  # sidebar needs to call controller
-    # controller.show_page("dashboard")
+    controller.show_page("dashboard")
 
     root.run()

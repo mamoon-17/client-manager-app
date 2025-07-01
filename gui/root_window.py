@@ -5,7 +5,7 @@ class Root:
     def __init__(self):
         self.__root = None
         self.__sidebar_frame = None
-
+        self.controller = None
         self.__SIDEBAR_COLOR = "#303338"
         self.__semi_bold_font = None
 
@@ -77,7 +77,7 @@ class Root:
         dashboard_Button.grid(row=1, column=0, sticky="n", padx=10, pady=10)
 
     def InvoiceButton(self):
-        dashboard_Button = ctk.CTkButton(
+        invoice_button = ctk.CTkButton(
         self.__sidebar_frame,
         text="Invoices",
         font=self.__semi_bold_font,
@@ -86,9 +86,10 @@ class Root:
         hover_color="#3b4147",       # Optional: hover effect
         corner_radius=10,
         height=60,
-        width=210
+        width=210,
+        command=self.on_invoices_click
         )
-        dashboard_Button.grid(row=3, column=0, sticky="n", padx=10, pady=10)
+        invoice_button.grid(row=2, column=0, sticky="n", padx=10, pady=10)
 
     def PaymentButton(self):
         dashboard_Button = ctk.CTkButton(
@@ -102,7 +103,7 @@ class Root:
         height=60,
         width=210
         )
-        dashboard_Button.grid(row=4, column=0, sticky="n", padx=10, pady=10)
+        dashboard_Button.grid(row=3, column=0, sticky="n", padx=10, pady=10)
 
     def inject_controller(self, controller):
         self.controller = controller
@@ -110,6 +111,10 @@ class Root:
     def on_dashboard_click(self):
         if self.controller:
             self.controller.show_page("dashboard")
+
+    def on_invoices_click(self):
+        if self.controller:
+            self.controller.show_page("invoices")
 
     def get_root(self):
         return self.__root
