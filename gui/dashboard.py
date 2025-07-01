@@ -6,7 +6,6 @@ class Dashboard(ctk.CTkFrame):
         super().__init__(root)
 
         self.__db = db
-        # Pre-declare frames (safe access)
         self.__root = root
         self.__top_frame = None
         self.__middle_frame = None
@@ -23,8 +22,6 @@ class Dashboard(ctk.CTkFrame):
         self.__WIDGET_COLOR = "#303339"
         self.__FRAME_COLOR = "#23262b"
         self.__temp_color = "#747679"
-        
-        self.__semi_bold_font = None
 
         # Init layout
         self.grid(row=0, column=1, sticky="nsew")

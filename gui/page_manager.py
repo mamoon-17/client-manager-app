@@ -1,6 +1,7 @@
 # gui/page_manager.py
 from gui.dashboard import Dashboard
 from gui.invoice_form import InvoicesPage
+from gui.clients import Clients
 
 class PageManager:
     def __init__(self, root, db):
@@ -22,3 +23,8 @@ class PageManager:
             if "invoices" not in self.pages:
                 self.pages["invoices"] = InvoicesPage(self.root, self.db)
             self.pages["invoices"].grid(row=0, column=1, sticky="nsew")
+
+        elif name == "clients":
+            if "clients" not in self.pages:
+                self.pages["clients"] = Clients(self.root, self.db)
+            self.pages["clients"].grid(row=0, column=1, sticky="nsew")

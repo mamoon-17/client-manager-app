@@ -72,7 +72,8 @@ class Root:
         hover_color="#3b4147",       # Optional: hover effect
         corner_radius=10,
         height=60,
-        width=210
+        width=210,
+        command=self.on_clients_click
         )
         dashboard_Button.grid(row=1, column=0, sticky="n", padx=10, pady=10)
 
@@ -115,6 +116,10 @@ class Root:
     def on_invoices_click(self):
         if self.controller:
             self.controller.show_page("invoices")
+
+    def on_clients_click(self):
+        if self.controller:
+            self.controller.show_page("clients")
 
     def get_root(self):
         return self.__root

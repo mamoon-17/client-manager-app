@@ -42,6 +42,8 @@ class Queries:
                 bank_name VARCHAR(100) NOT NULL,
                 account_number VARCHAR(50) NOT NULL, 
                 status ENUM('PAID', 'UNPAID') NOT NULL DEFAULT 'UNPAID',
+                FOREIGN KEY (bank_name) REFERENCES clients(bank_name),
+                FOREIGN KEY (account_number) REFERENCES clients(account_number),
                 FOREIGN KEY (client_id) REFERENCES clients(client_id)
             );
             """
