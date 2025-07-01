@@ -58,10 +58,10 @@ class Clients(ctk.CTkFrame):
         page_label.grid(row=0, column=0, columnspan=4, pady=(0, 10), sticky="n")
 
         prev_btn = ctk.CTkButton(pagination_frame, text="Previous")
-        prev_btn.grid(row=1, column=1, padx=(0, 5), pady=(0, 35), sticky="e")
+        prev_btn.grid(row=1, column=1, padx=(0, 5), pady=(0, 30), sticky="e")
 
         next_btn = ctk.CTkButton(pagination_frame, text="Next")
-        next_btn.grid(row=1, column=2, padx=(5, 0), pady=(0, 35), sticky="w")
+        next_btn.grid(row=1, column=2, padx=(5, 0), pady=(0, 30), sticky="w")
 
     def clients_title(self):
         title_frame = ctk.CTkFrame(self, fg_color=self.__FRAME_COLOR)
