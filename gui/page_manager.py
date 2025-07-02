@@ -1,7 +1,9 @@
 # gui/page_manager.py
 from gui.dashboard import Dashboard
-from gui.invoice_form import InvoicesPage
+from gui.invoices import InvoicesPage
 from gui.clients import Clients
+from gui.add_clients import AddClientsPage
+from gui.invoice_form import AddInvoicesPage
 
 class PageManager:
     def __init__(self, root, db):
@@ -22,9 +24,21 @@ class PageManager:
         elif name == "invoices":
             if "invoices" not in self.pages:
                 self.pages["invoices"] = InvoicesPage(self.root, self.db)
+                self.pages["invoices"].inject_controller(self)
             self.pages["invoices"].grid(row=0, column=1, sticky="nsew")
+
+        elif name == "add_invoice":
+            if "add_invoice" not in self.pages:
+                self.pages["add_invoice"] = AddInvoicesPage(self.root, self.db)
+            self.pages["add_invoice"].grid(row=0, column=1, sticky="nsew")
 
         elif name == "clients":
             if "clients" not in self.pages:
                 self.pages["clients"] = Clients(self.root, self.db)
+                self.pages["clients"].inject_controller(self)
             self.pages["clients"].grid(row=0, column=1, sticky="nsew")
+
+        elif name == "add_clients":
+            if "add_clients" not in self.pages:
+                self.pages["add_clients"] = AddClientsPage(self.root, self.db)
+            self.pages["add_clients"].grid(row=0, column=1, sticky="nsew")

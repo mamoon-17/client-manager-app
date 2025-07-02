@@ -3,7 +3,7 @@ from customtkinter import CTkFont
 from tkinter import messagebox
 from datetime import datetime, date
 
-class InvoicesPage(ctk.CTkFrame):
+class AddInvoicesPage(ctk.CTkFrame):
     def __init__(self, root, db):
         super().__init__(root)
 
