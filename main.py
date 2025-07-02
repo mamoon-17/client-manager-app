@@ -13,3 +13,4 @@ if __name__ == "__main__":
     controller.show_page("dashboard")
 
     root.run()
+    test
