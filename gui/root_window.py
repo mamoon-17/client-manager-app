@@ -102,7 +102,9 @@ class Root:
         hover_color="#3b4147",       # Optional: hover effect
         corner_radius=10,
         height=60,
-        width=210
+        width=210,
+        command=self.on_payments_click
+
         )
         dashboard_Button.grid(row=3, column=0, sticky="n", padx=10, pady=10)
 
@@ -120,6 +122,10 @@ class Root:
     def on_clients_click(self):
         if self.controller:
             self.controller.show_page("clients")
+    def on_payments_click(self):
+        if self.controller:
+            self.controller.show_page("payments")
+
 
     def get_root(self):
         return self.__root
