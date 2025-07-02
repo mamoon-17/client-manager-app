@@ -77,7 +77,7 @@ class Dashboard(ctk.CTkFrame):
         text_color="white",               # Valid for CTkLabel
         height=150
         )
-        totalClients_Label.grid(row=0, column=0, sticky="nw", padx=60, pady=(20, 0))    
+        totalClients_Label.grid(row=0, column=0, sticky="nw", padx=60, pady=(5, 0))    
 
         totalClients_Value = ctk.CTkLabel(
         self.__totalClients_frame,
@@ -112,7 +112,7 @@ class Dashboard(ctk.CTkFrame):
         text_color="white",          
         height=150
         )
-        totalInvoices_Label.grid(row=0, column=0, sticky="nw", padx=60, pady=(20, 0))    
+        totalInvoices_Label.grid(row=0, column=0, sticky="nw", padx=60, pady=(5, 0))    
 
         totalInvoices_Value = ctk.CTkLabel(
         self.__totalInvoices_frame,
@@ -147,15 +147,30 @@ class Dashboard(ctk.CTkFrame):
         self.__paidInvoices_frame.grid(row=0, column=0, padx=(0, 10), pady=0, sticky="nsew")
         self.__paidInvoices_frame.grid_propagate(False)
 
+        # Configure grid inside paidInvoices frame
+        self.__paidInvoices_frame.columnconfigure(0, weight=0)
+        self.__paidInvoices_frame.columnconfigure(1, weight=1)
+        self.__paidInvoices_frame.rowconfigure(0, weight=1)
+        self.__paidInvoices_frame.rowconfigure(1, weight=1)
+
+        # === "Paid Invoices" Label ===
+        label = ctk.CTkLabel(
+            self.__paidInvoices_frame,
+            text="Paid Invoices",
+            font=CTkFont(family="Raleway SemiBold", size=30),
+            text_color="white"
+        )
+        label.grid(row=0, column=0, columnspan=2, padx=20, pady=(15, 0), sticky="w")
+
         # === Green Square with "$" ===
         green_square = ctk.CTkFrame(
             self.__paidInvoices_frame,
-            fg_color="#20c997",
-            width=50,
-            height=50,
+            fg_color="#39a274",
+            width=100,
+            height=100,
             corner_radius=10
         )
-        green_square.grid(row=0, column=0, padx=30, pady=(25, 0), sticky="nw")
+        green_square.grid(row=1, column=0, padx=(20, 10), pady=10, sticky="w")
         green_square.grid_propagate(False)
 
         dollar_label = ctk.CTkLabel(
@@ -166,24 +181,14 @@ class Dashboard(ctk.CTkFrame):
         )
         dollar_label.place(relx=0.5, rely=0.5, anchor="center")
 
-        # === "Paid Invoices" Label ===
-        label = ctk.CTkLabel(
-            self.__paidInvoices_frame,
-            text="Paid Invoices",
-            font=CTkFont(family="Raleway SemiBold", size=28),
-            text_color="white"
-        )
-        label.grid(row=0, column=0, padx=100, pady=(30, 0), sticky="nw")
-
-        # === Value Label ===
+        # === Value Label (aligned with dollar sign) ===
         value = ctk.CTkLabel(
             self.__paidInvoices_frame,
             text="1,224",
             font=ctk.CTkFont(size=45, weight="bold"),
             text_color="white"
         )
-        value.grid(row=1, column=0, padx=60, pady=(10, 50), sticky="nw")
-
+        value.grid(row=1, column=1, padx=35, sticky="w")
 
 
     def initRecentActivityFrame(self):
@@ -202,23 +207,24 @@ class Dashboard(ctk.CTkFrame):
         self.RecentActivityLabel()
 
     def RecentActivityLabel(self):
-        self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=32)
+        self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=30)
+
         totalRecentActivity_Label = ctk.CTkLabel(
-        self.__recentActivity_frame,
-        text="Recent Activity",
-        font=self.__labelsemi_bold_font,
-        text_color="white",               # Valid for CTkLabel
-        height=150
+            self.__recentActivity_frame,
+            text="Recent Activity",
+            font=self.__labelsemi_bold_font,
+            text_color="white"
         )
-        totalRecentActivity_Label.grid(row=0, column=0, sticky="nw", padx=60, pady=(5, 0))    
+        totalRecentActivity_Label.grid(row=0, column=0, sticky="nw", padx=30, pady=(30, 5))
 
         totalRecentActivity_Value = ctk.CTkLabel(
-        self.__recentActivity_frame,
-        text="Sent 100 Dollars $",  # Dynamic value can go here
-        font=ctk.CTkFont(size=20, weight="bold"),  # You can tweak font
-        text_color="white"
+            self.__recentActivity_frame,
+            text="Sent 100 Dollars $",  # Dynamic value can go here
+            font=ctk.CTkFont(size=20, weight="bold"),
+            text_color="white"
         )
-        totalRecentActivity_Value.grid(row=1, column=0, sticky="nw", padx=60, pady=(0, 50))
+        totalRecentActivity_Value.grid(row=1, column=0, sticky="nw", padx=30, pady=(5, 30))
+
 
     def initBottomframe(self):
         self.__bottom_frame = ctk.CTkFrame(

@@ -43,8 +43,9 @@ class Root:
         self.DashboardButton()
         self.ClientButton()
         self.InvoiceButton()
-        self.PaymentButton()
-
+        # self.PaymentButton()  
+        self.addSidebarSeparator()
+        self.QuitButton()  
     def DashboardButton(self):
         self.__semi_bold_font = CTkFont(family="Raleway SemiBold", size=24)
 
@@ -107,6 +108,35 @@ class Root:
 
         )
         dashboard_Button.grid(row=3, column=0, sticky="n", padx=10, pady=10)
+    def QuitButton(self):
+        quit_button = ctk.CTkButton(
+            self.__sidebar_frame,
+            text="⏻ Quit",  
+            font=self.__semi_bold_font,
+            fg_color=self.__SIDEBAR_COLOR,       
+            text_color="white",
+            hover_color="#3b4147",               
+            corner_radius=10,
+            height=60,
+            width=210,
+            command=self.quit_app
+        )
+        quit_button.grid(row=4, column=0, sticky="n", padx=10, pady=(10, 10))
+
+
+
+
+    def addSidebarSeparator(self):
+        separator = ctk.CTkLabel(
+            self.__sidebar_frame,
+            text="─" * 40,
+            text_color="#555"
+        )
+        separator.grid(row=3, column=0, pady=(10, 5))
+
+
+
+
 
     def inject_controller(self, controller):
         self.controller = controller
@@ -122,9 +152,14 @@ class Root:
     def on_clients_click(self):
         if self.controller:
             self.controller.show_page("clients")
+
     def on_payments_click(self):
         if self.controller:
             self.controller.show_page("payments")
+
+    def quit_app(self):
+        self.__root.destroy()
+
 
 
     def get_root(self):
