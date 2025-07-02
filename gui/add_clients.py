@@ -1,7 +1,6 @@
 import customtkinter as ctk
 from tkinter import messagebox
 
-
 class AddClientsPage(ctk.CTkFrame):
     def __init__(self, root, db):
         super().__init__(root)
@@ -107,17 +106,23 @@ class AddClientsPage(ctk.CTkFrame):
             return
 
         try:
+            cursor = self.__db.get_cursor()
             query = """
                 INSERT INTO clients (name, email, phone, company_name)
                 VALUES (%s, %s, %s, %s)
             """
-            self.__cursor.execute(query, (name, email, phone, company or None))
+            cursor.execute(query, (name, email, phone, company or None))
             self.__db.commit()
             messagebox.showinfo("Success", "Client added successfully.")
             self.clearForm()
+            self.controller.get_page("clients").refresh_client_rows()
+
         except Exception as e:
             self.__db.rollback()
             messagebox.showerror("Database Error", f"Error adding client: {str(e)}")
+
+    def inject_controller(self, controller):
+        self.controller = controller
 
     def clearForm(self):
         for var in [self.__name_var, self.__email_var, self.__phone_var, self.__company_var]:

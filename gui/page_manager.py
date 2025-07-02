@@ -32,6 +32,7 @@ class PageManager:
         elif name == "add_invoice":
             if "add_invoice" not in self.pages:
                 self.pages["add_invoice"] = AddInvoicesPage(self.root, self.db)
+                self.pages["add_invoice"].inject_controller(self) 
             self.pages["add_invoice"].grid(row=0, column=1, sticky="nsew")
 
         elif name == "clients":
@@ -43,6 +44,7 @@ class PageManager:
         elif name == "add_clients":
             if "add_clients" not in self.pages:
                 self.pages["add_clients"] = AddClientsPage(self.root, self.db)
+                self.pages["add_clients"].inject_controller(self)
             self.pages["add_clients"].grid(row=0, column=1, sticky="nsew")
         
         elif name == "payments":
@@ -50,4 +52,7 @@ class PageManager:
                 self.pages["payments"] = PaymentsPage(self.root, self.db)
                 self.pages["payments"].inject_controller(self)
             self.pages["payments"].grid(row=0, column=1, sticky="nsew")
+
+    def get_page(self, name):
+        return self.pages.get(name)
 

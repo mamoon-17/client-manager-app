@@ -14,7 +14,6 @@ class DB:
         self.__db_name = os.getenv("DB_NAME")
 
         try:
-            # Step 1: Connect to MySQL server without specifying a database
             temp_conn = mysql.connector.connect(
                 host=os.getenv("DB_HOST"),
                 user=os.getenv("DB_USER"),
@@ -29,7 +28,6 @@ class DB:
                 cursor.close()
                 temp_conn.close()
 
-            # Step 2: Connect to the actual database
             self.__connection = mysql.connector.connect(
                 host=os.getenv("DB_HOST"),
                 user=os.getenv("DB_USER"),
@@ -40,8 +38,6 @@ class DB:
 
             if self.__connection.is_connected():
                 print(f"Connected to MySQL database '{self.__db_name}'")
-
-                # Step 3: Initialize Queries to create tables
                 self.__queries = Queries(self.__connection)
 
         except Error as e:
@@ -49,6 +45,15 @@ class DB:
 
     def get_connection(self):
         return self.__connection
+
+    def get_cursor(self):
+        return self.__connection.cursor()  # or define it once in __init__
+
+    def commit(self):
+        self.__connection.commit()
+
+    def rollback(self):
+        self.__connection.rollback()
 
     def close(self):
         if self.__queries:
