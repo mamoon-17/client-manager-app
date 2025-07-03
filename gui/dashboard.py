@@ -9,6 +9,8 @@ class Dashboard(ctk.CTkFrame):
 
         self.__db = db
         self.__root = root
+
+        # Frame containers
         self.__top_frame = None
         self.__middle_frame = None
         self.__bottom_frame = None
@@ -16,19 +18,14 @@ class Dashboard(ctk.CTkFrame):
         self.__totalInvoices_frame = None
         self.__paidInvoices_frame = None
         self.__recentActivity_frame = None
-        self.__addClient_frame = None
-        self.__createInvoice_frame = None
-        self.__addPayment_frame = None
 
         # Colors
         self.__WIDGET_COLOR = "#303339"
         self.__FRAME_COLOR = "#23262b"
         self.__temp_color = "#747679"
 
-        # Init layout
+        # Layout
         self.grid(row=0, column=1, sticky="nsew")
-
-        # Allow vertical resizing
         self.configure(fg_color=self.__FRAME_COLOR, corner_radius=0)
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
@@ -39,16 +36,15 @@ class Dashboard(ctk.CTkFrame):
         self.initMiddleframe()
         self.initBottomframe()
 
+    def inject_controller(self, controller):
+        self.controller = controller
 
     def initTopframe(self):
-        self.__top_frame = ctk.CTkFrame(
-            self, fg_color=self.__FRAME_COLOR, corner_radius=15
-        )
+        self.__top_frame = ctk.CTkFrame(self, fg_color=self.__FRAME_COLOR, corner_radius=15)
         self.__top_frame.grid(row=0, column=0, sticky="nsew", padx=20, pady=(20, 10))
         self.__top_frame.grid_propagate(False)
-
-        self.__top_frame.columnconfigure(0, weight=1)  # <-- added: enable first column to expand
-        self.__top_frame.columnconfigure(1, weight=1)  # <-- added: enable second column to expand
+        self.__top_frame.columnconfigure(0, weight=1)
+        self.__top_frame.columnconfigure(1, weight=1)
         self.__top_frame.rowconfigure(0, weight=1)
 
         self.initTotalClientsFrame()
@@ -62,7 +58,7 @@ class Dashboard(ctk.CTkFrame):
             height=220,
             corner_radius=15,
         )
-        self.__totalClients_frame.grid(row=0, column=0, padx=(0, 10), pady=0, sticky="nsew")
+        self.__totalClients_frame.grid(row=0, column=0, padx=(0, 10), sticky="nsew")
         self.__totalClients_frame.grid_propagate(False)
         self.__totalClients_frame.columnconfigure(0, weight=1)
         self.__totalClients_frame.rowconfigure(0, weight=1)
@@ -70,67 +66,62 @@ class Dashboard(ctk.CTkFrame):
 
     def totalClientsLabel(self):
         self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=32)
-        totalClients_Label = ctk.CTkLabel(
-        self.__totalClients_frame,
-        text="Total Clients",
-        font=self.__labelsemi_bold_font,
-        text_color="white",               # Valid for CTkLabel
-        height=150
+        label = ctk.CTkLabel(
+            self.__totalClients_frame,
+            text="Total Clients",
+            font=self.__labelsemi_bold_font,
+            text_color="white",
+            height=150
         )
-        totalClients_Label.grid(row=0, column=0, sticky="nw", padx=60, pady=(5, 0))    
+        label.grid(row=0, column=0, sticky="nw", padx=60, pady=(5, 0))
 
-        totalClients_Value = ctk.CTkLabel(
-        self.__totalClients_frame,
-        text="146",  # Dynamic value can go here
-        font=ctk.CTkFont(size=45, weight="bold"),  # You can tweak font
-        text_color="white"
+        value = ctk.CTkLabel(
+            self.__totalClients_frame,
+            text="146",
+            font=ctk.CTkFont(size=45, weight="bold"),
+            text_color="white"
         )
-        totalClients_Value.grid(row=1, column=0, sticky="nw", padx=60, pady=(0, 50))
-
+        value.grid(row=1, column=0, sticky="nw", padx=60, pady=(0, 50))
 
     def initTotalInvoicesFrame(self):
         self.__totalInvoices_frame = ctk.CTkFrame(
-        self.__top_frame,
-        fg_color=self.__WIDGET_COLOR,
-        width=300,
-        height=220,
-        corner_radius=15,
+            self.__top_frame,
+            fg_color=self.__WIDGET_COLOR,
+            width=300,
+            height=220,
+            corner_radius=15,
         )
-        self.__totalInvoices_frame.grid(row=0, column=1, padx=(10, 0), pady=0, sticky="nsew")
+        self.__totalInvoices_frame.grid(row=0, column=1, padx=(10, 0), sticky="nsew")
         self.__totalInvoices_frame.grid_propagate(False)
         self.__totalInvoices_frame.rowconfigure(0, weight=1)
         self.__totalInvoices_frame.columnconfigure(1, weight=1)
-
         self.totalInvoicesLabel()
 
     def totalInvoicesLabel(self):
         self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=32)
-        totalInvoices_Label = ctk.CTkLabel(
-        self.__totalInvoices_frame,
-        text="Total Invoices",
-        font=self.__labelsemi_bold_font,
-        text_color="white",          
-        height=150
+        label = ctk.CTkLabel(
+            self.__totalInvoices_frame,
+            text="Total Invoices",
+            font=self.__labelsemi_bold_font,
+            text_color="white",
+            height=150
         )
-        totalInvoices_Label.grid(row=0, column=0, sticky="nw", padx=60, pady=(5, 0))    
+        label.grid(row=0, column=0, sticky="nw", padx=60, pady=(5, 0))
 
-        totalInvoices_Value = ctk.CTkLabel(
-        self.__totalInvoices_frame,
-        text="1,247",  # Dynamic value can go here
-        font=ctk.CTkFont(size=45, weight="bold"),  # You can tweak font
-        text_color="white"
+        value = ctk.CTkLabel(
+            self.__totalInvoices_frame,
+            text="1,247",
+            font=ctk.CTkFont(size=45, weight="bold"),
+            text_color="white"
         )
-        totalInvoices_Value.grid(row=1, column=0, sticky="nw", padx=60, pady=(0, 50))
+        value.grid(row=1, column=0, sticky="nw", padx=60, pady=(0, 50))
 
     def initMiddleframe(self):
-        self.__middle_frame = ctk.CTkFrame(
-            self, fg_color=self.__FRAME_COLOR, corner_radius=15
-        )
+        self.__middle_frame = ctk.CTkFrame(self, fg_color=self.__FRAME_COLOR, corner_radius=15)
         self.__middle_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=10)
         self.__middle_frame.grid_propagate(False)
-
-        self.__middle_frame.columnconfigure(0, weight=1)  # <-- added: enable first column to expand
-        self.__middle_frame.columnconfigure(1, weight=1)  # <-- added: enable second column to expand
+        self.__middle_frame.columnconfigure(0, weight=1)
+        self.__middle_frame.columnconfigure(1, weight=1)
         self.__middle_frame.rowconfigure(0, weight=1)
 
         self.initPaidInvoicesFrame()
@@ -144,16 +135,13 @@ class Dashboard(ctk.CTkFrame):
             height=220,
             corner_radius=15,
         )
-        self.__paidInvoices_frame.grid(row=0, column=0, padx=(0, 10), pady=0, sticky="nsew")
+        self.__paidInvoices_frame.grid(row=0, column=0, padx=(0, 10), sticky="nsew")
         self.__paidInvoices_frame.grid_propagate(False)
-
-        # Configure grid inside paidInvoices frame
         self.__paidInvoices_frame.columnconfigure(0, weight=0)
         self.__paidInvoices_frame.columnconfigure(1, weight=1)
         self.__paidInvoices_frame.rowconfigure(0, weight=1)
         self.__paidInvoices_frame.rowconfigure(1, weight=1)
 
-        # === "Paid Invoices" Label ===
         label = ctk.CTkLabel(
             self.__paidInvoices_frame,
             text="Paid Invoices",
@@ -162,7 +150,6 @@ class Dashboard(ctk.CTkFrame):
         )
         label.grid(row=0, column=0, columnspan=2, padx=20, pady=(15, 0), sticky="w")
 
-        # === Green Square with "$" ===
         green_square = ctk.CTkFrame(
             self.__paidInvoices_frame,
             fg_color="#39a274",
@@ -176,12 +163,11 @@ class Dashboard(ctk.CTkFrame):
         dollar_label = ctk.CTkLabel(
             green_square,
             text="$",
-            font=ctk.CTkFont(size=28, weight="bold"),
+            font=ctk.CTkFont(size=35, weight="bold"),
             text_color="white"
         )
         dollar_label.place(relx=0.5, rely=0.5, anchor="center")
 
-        # === Value Label (aligned with dollar sign) ===
         value = ctk.CTkLabel(
             self.__paidInvoices_frame,
             text="1,224",
@@ -190,93 +176,82 @@ class Dashboard(ctk.CTkFrame):
         )
         value.grid(row=1, column=1, padx=35, sticky="w")
 
-
     def initRecentActivityFrame(self):
         self.__recentActivity_frame = ctk.CTkFrame(
-        self.__middle_frame,
-        fg_color="#623d40",
-        width=300,
-        height=220,
-        corner_radius=15,
-    )
-        self.__recentActivity_frame.grid(row=0, column=1, padx=(10, 0), pady=0, sticky="nsew")
+            self.__middle_frame,
+            fg_color="#623d40",
+            width=300,
+            height=220,
+            corner_radius=15,
+        )
+        self.__recentActivity_frame.grid(row=0, column=1, padx=(10, 0), sticky="nsew")
         self.__recentActivity_frame.grid_propagate(False)
         self.__recentActivity_frame.rowconfigure(0, weight=1)
         self.__recentActivity_frame.columnconfigure(1, weight=1)
-
         self.RecentActivityLabel()
 
     def RecentActivityLabel(self):
         self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=30)
-
-        totalRecentActivity_Label = ctk.CTkLabel(
+        label = ctk.CTkLabel(
             self.__recentActivity_frame,
             text="Recent Activity",
             font=self.__labelsemi_bold_font,
             text_color="white"
         )
-        totalRecentActivity_Label.grid(row=0, column=0, sticky="nw", padx=30, pady=(30, 5))
+        label.grid(row=0, column=0, sticky="nw", padx=30, pady=(40, 5))
 
-        totalRecentActivity_Value = ctk.CTkLabel(
+        value = ctk.CTkLabel(
             self.__recentActivity_frame,
-            text="Sent 100 Dollars $",  # Dynamic value can go here
+            text="Sent 100 Dollars $",
             font=ctk.CTkFont(size=20, weight="bold"),
             text_color="white"
         )
-        totalRecentActivity_Value.grid(row=1, column=0, sticky="nw", padx=30, pady=(5, 30))
-
+        value.grid(row=1, column=0, sticky="nw", padx=30, pady=(5, 30))
 
     def initBottomframe(self):
-        self.__bottom_frame = ctk.CTkFrame(
-            self, fg_color=self.__FRAME_COLOR, corner_radius=15
-        )
+        self.__bottom_frame = ctk.CTkFrame(self, fg_color=self.__FRAME_COLOR, corner_radius=15)
         self.__bottom_frame.grid(row=2, column=0, sticky="nsew", padx=20, pady=(10, 20))
         self.__bottom_frame.grid_propagate(False)
-
-        self.__bottom_frame.columnconfigure(0, weight=1)  # <-- added: enable first column to expand
-        self.__bottom_frame.columnconfigure(1, weight=1)  # <-- added: enable second column to expand
-        self.__bottom_frame.columnconfigure(2, weight=1)  # <-- added: enable second column to expand
+        self.__bottom_frame.columnconfigure(0, weight=1)
+        self.__bottom_frame.columnconfigure(1, weight=1)
+        self.__bottom_frame.columnconfigure(2, weight=1)
         self.__bottom_frame.rowconfigure(0, weight=1)
 
-        self.initAddClientFrame()
-        self.initCreateInvoiceFrame()
-        self.initaddPaymentFrame()
-
-    def initAddClientFrame(self):
-        self.__addClient_frame = ctk.CTkFrame(
+        add_client_btn = ctk.CTkButton(
             self.__bottom_frame,
+            text="Add Client",
+            font=CTkFont(family="Raleway SemiBold", size=30),
             fg_color=self.__WIDGET_COLOR,
-            width=300,
-            height=220,
+            hover_color="#3a3d44",
+            text_color="white",
             corner_radius=15,
+            height=220,
+            command=lambda: self.controller.show_page("add_clients")
         )
-        self.__addClient_frame.grid(row=0, column=0, padx=(0, 10), pady=0, sticky="nsew")
-        self.__addClient_frame.grid_propagate(False)
-        self.__addClient_frame.columnconfigure(0, weight=1)
-        self.__addClient_frame.rowconfigure(0, weight=1)
+        add_client_btn.grid(row=0, column=0, padx=(0, 10), pady=0, sticky="nsew")
 
-    def initCreateInvoiceFrame(self):
-        self.__createInvoice_frame = ctk.CTkFrame(
-        self.__bottom_frame,
-        fg_color=self.__WIDGET_COLOR,
-        width=300,
-        height=220,
-        corner_radius=15,
-    )
-        self.__createInvoice_frame.grid(row=0, column=1, padx=10, pady=0, sticky="nsew")
-        self.__createInvoice_frame.grid_propagate(False)
-        self.__createInvoice_frame.rowconfigure(0, weight=1)
-        self.__createInvoice_frame.columnconfigure(1, weight=1)
+        create_invoice_btn = ctk.CTkButton(
+            self.__bottom_frame,
+            text="Create Invoice",
+            font=CTkFont(family="Raleway SemiBold", size=30),
+            fg_color=self.__WIDGET_COLOR,
+            hover_color="#3a3d44",
+            text_color="white",
+            corner_radius=15,
+            height=220,
+            command=lambda: self.controller.show_page("add_invoice")
+        )
+        create_invoice_btn.grid(row=0, column=1, padx=10, pady=0, sticky="nsew")
 
-    def initaddPaymentFrame(self):
-        self.__addPayment_frame = ctk.CTkFrame(
-        self.__bottom_frame,
-        fg_color=self.__WIDGET_COLOR,
-        width=300,
-        height=220,
-        corner_radius=15,
-    )
-        self.__addPayment_frame.grid(row=0, column=2, padx=(10, 0), pady=0, sticky="nsew")
-        self.__addPayment_frame.grid_propagate(False)
-        self.__addPayment_frame.rowconfigure(0, weight=1)
-        self.__addPayment_frame.columnconfigure(2, weight=1)
+        add_payment_btn = ctk.CTkButton(
+            self.__bottom_frame,
+            text="Add Payment",
+            font=CTkFont(family="Raleway SemiBold", size=30),
+            fg_color=self.__WIDGET_COLOR,
+            hover_color="#3a3d44",
+            text_color="white",
+            corner_radius=15,
+            height=220,
+            command=lambda: self.controller.show_page("payments")
+        )
+        add_payment_btn.grid(row=0, column=2, padx=(10, 0), pady=0, sticky="nsew")
