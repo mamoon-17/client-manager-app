@@ -1,0 +1,50 @@
+import customtkinter as ctk
+from customtkinter import CTkFont
+
+class ActivityLogPage(ctk.CTkFrame):
+    def __init__(self, root, db):
+        super().__init__(root)
+        self.__db = db
+        self.configure(fg_color="#23262b")
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
+        title = ctk.CTkLabel(
+            self,
+            text="All Activity Logs",
+            font=CTkFont(family="Raleway SemiBold", size=34),
+            text_color="white"
+        )
+        title.grid(row=0, column=0, pady=20)
+
+        self.scrollable_frame = ctk.CTkScrollableFrame(
+            self,
+            fg_color="#2b2e33",
+            corner_radius=10
+        )
+        self.scrollable_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=10)
+
+        self.populate_logs()
+
+    def populate_logs(self):
+        activities = self.__db.get_queries().get_recent_activities(limit=100)
+
+        if not activities:
+            no_data = ctk.CTkLabel(self.scrollable_frame, text="No activity found.", text_color="white")
+            no_data.pack(pady=10)
+            return
+
+        for i, (activity_type, desc) in enumerate(activities):
+            log = ctk.CTkLabel(
+                self.scrollable_frame,
+                text=f"{activity_type}: {desc}",
+                text_color="white",
+                font=CTkFont(size=16),
+                anchor="w",
+                wraplength=800,
+                justify="left"
+            )
+            log.pack(fill="x", padx=10, pady=5)
+    def inject_controller(self, controller):
+        self.controller = controller
+

@@ -1,7 +1,5 @@
 import customtkinter as ctk
 from customtkinter import CTkFont
-from PIL import Image
-import os
 
 class Dashboard(ctk.CTkFrame):
     def __init__(self, root, db):
@@ -22,7 +20,6 @@ class Dashboard(ctk.CTkFrame):
         # Colors
         self.__WIDGET_COLOR = "#303339"
         self.__FRAME_COLOR = "#23262b"
-        self.__temp_color = "#747679"
 
         # Layout
         self.grid(row=0, column=1, sticky="nsew")
@@ -66,6 +63,8 @@ class Dashboard(ctk.CTkFrame):
 
     def totalClientsLabel(self):
         self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=32)
+        total = self.__db._DB__queries.get_total_clients()
+
         label = ctk.CTkLabel(
             self.__totalClients_frame,
             text="Total Clients",
@@ -77,7 +76,7 @@ class Dashboard(ctk.CTkFrame):
 
         value = ctk.CTkLabel(
             self.__totalClients_frame,
-            text="146",
+            text=str(total),
             font=ctk.CTkFont(size=45, weight="bold"),
             text_color="white"
         )
@@ -99,6 +98,8 @@ class Dashboard(ctk.CTkFrame):
 
     def totalInvoicesLabel(self):
         self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=32)
+        total = self.__db._DB__queries.get_total_invoices()
+
         label = ctk.CTkLabel(
             self.__totalInvoices_frame,
             text="Total Invoices",
@@ -110,7 +111,7 @@ class Dashboard(ctk.CTkFrame):
 
         value = ctk.CTkLabel(
             self.__totalInvoices_frame,
-            text="1,247",
+            text=str(total),
             font=ctk.CTkFont(size=45, weight="bold"),
             text_color="white"
         )
@@ -142,6 +143,8 @@ class Dashboard(ctk.CTkFrame):
         self.__paidInvoices_frame.rowconfigure(0, weight=1)
         self.__paidInvoices_frame.rowconfigure(1, weight=1)
 
+        total_paid = self.__db._DB__queries.get_paid_invoices()
+
         label = ctk.CTkLabel(
             self.__paidInvoices_frame,
             text="Paid Invoices",
@@ -170,7 +173,7 @@ class Dashboard(ctk.CTkFrame):
 
         value = ctk.CTkLabel(
             self.__paidInvoices_frame,
-            text="1,224",
+            text=str(total_paid),
             font=ctk.CTkFont(size=45, weight="bold"),
             text_color="white"
         )
@@ -192,21 +195,38 @@ class Dashboard(ctk.CTkFrame):
 
     def RecentActivityLabel(self):
         self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=30)
-        label = ctk.CTkLabel(
+
+        title_label = ctk.CTkLabel(
             self.__recentActivity_frame,
             text="Recent Activity",
             font=self.__labelsemi_bold_font,
             text_color="white"
         )
-        label.grid(row=0, column=0, sticky="nw", padx=30, pady=(40, 5))
+        title_label.grid(row=0, column=0, sticky="nw", padx=30, pady=(20, 5))
 
-        value = ctk.CTkLabel(
+        activities = self.__db._DB__queries.get_recent_activities(limit=3)
+
+        for i, activity in enumerate(activities):
+            label = ctk.CTkLabel(
+                self.__recentActivity_frame,
+                text=f"{activity[0]} - {activity[1]}",
+                font=ctk.CTkFont(size=18),
+                text_color="white"
+            )
+            label.grid(row=i+1, column=0, sticky="nw", padx=30)
+
+        view_all_btn = ctk.CTkButton(
             self.__recentActivity_frame,
-            text="Sent 100 Dollars $",
-            font=ctk.CTkFont(size=20, weight="bold"),
-            text_color="white"
+            text="View All",
+            font=ctk.CTkFont(size=14),
+            fg_color="white",
+            text_color="black",
+            corner_radius=10,
+            hover_color="#cccccc",
+            command=lambda: self.controller.show_page("activity_log")
+
         )
-        value.grid(row=1, column=0, sticky="nw", padx=30, pady=(5, 30))
+        view_all_btn.grid(row=4, column=0, sticky="se", padx=30, pady=(10, 10))
 
     def initBottomframe(self):
         self.__bottom_frame = ctk.CTkFrame(self, fg_color=self.__FRAME_COLOR, corner_radius=15)

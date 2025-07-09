@@ -4,6 +4,7 @@ from mysql.connector import Error
 class Queries:
 
     def __init__(self, connection):
+        self.__conn = connection
         self.__cursor = connection.cursor()
         self.create_clients_table()
         self.create_invoices_table()
@@ -93,6 +94,44 @@ class Queries:
         except Error as e:
             if "Duplicate" not in str(e):
                 print(f"Constraint error: {e}")
+
+    def get_total_clients(self):
+        try:
+            self.__cursor.execute("SELECT COUNT(*) FROM clients")
+            return self.__cursor.fetchone()[0]
+        except Error as e:
+            print(f"Error getting total clients: {e}")
+            return 0
+
+    def get_total_invoices(self):
+        try:
+            self.__cursor.execute("SELECT COUNT(*) FROM invoices")
+            return self.__cursor.fetchone()[0]
+        except Error as e:
+            print(f"Error getting total invoices: {e}")
+            return 0
+
+    def get_paid_invoices(self):
+        try:
+            self.__cursor.execute("SELECT COUNT(*) FROM invoices WHERE status = 'PAID'")
+            return self.__cursor.fetchone()[0]
+        except Error as e:
+            print(f"Error getting paid invoices: {e}")
+            return 0
+
+    def get_recent_activities(self, limit=3):
+        try:
+            query = """
+            SELECT activity_type, description
+            FROM activity_logs
+            ORDER BY timestamp DESC
+            LIMIT %s
+            """
+            self.__cursor.execute(query, (limit,))
+            return self.__cursor.fetchall()
+        except Error as e:
+            print(f"Error fetching recent activities: {e}")
+            return []
 
     def close(self):
         if self.__cursor:

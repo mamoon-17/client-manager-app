@@ -42,6 +42,8 @@ class DB:
 
         except Error as e:
             print(f"Error connecting to MySQL: {e}")
+    def get_queries(self):
+        return self.__queries
 
     def get_connection(self):
         return self.__connection

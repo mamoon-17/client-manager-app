@@ -5,6 +5,7 @@ from gui.clients import Clients
 from gui.add_clients import AddClientsPage
 from gui.invoice_form import AddInvoicesPage
 from gui.payments import PaymentsPage
+from gui.activity_log_page import ActivityLogPage
 
 
 class PageManager:
@@ -53,7 +54,12 @@ class PageManager:
                 self.pages["payments"] = PaymentsPage(self.root, self.db)
                 self.pages["payments"].inject_controller(self)
             self.pages["payments"].grid(row=0, column=1, sticky="nsew")
-
+        elif name == "activity_log":  # ✅ ADD THIS BLOCK
+            if "activity_log" not in self.pages:
+                self.pages["activity_log"] = ActivityLogPage(self.root, self.db)
+                self.pages["activity_log"].inject_controller(self)
+            self.pages["activity_log"].grid(row=0, column=1, sticky="nsew")
+            
     def get_page(self, name):
         return self.pages.get(name)
 
