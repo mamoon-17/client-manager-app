@@ -2,6 +2,9 @@ import customtkinter as ctk
 from customtkinter import CTkFont
 from datetime import datetime
 import math
+from utils.pdf_generator import generate_invoice_pdf
+from tkinter import filedialog
+
 
 class InvoicesPage(ctk.CTkFrame):
     def __init__(self, root, db):
@@ -75,15 +78,75 @@ class InvoicesPage(ctk.CTkFrame):
         for i, (invoice_id, client, amount, status, due) in enumerate(self.__invoices):
             frame = ctk.CTkFrame(self.invoices_container, fg_color=self.__WIDGET_COLOR, corner_radius=10)
             frame.grid(row=i, column=0, sticky="ew", padx=20, pady=10)
-            self.invoices_container.rowconfigure(i, weight=0)
-
+            frame.columnconfigure(0, weight=0)  # label
+            frame.columnconfigure(1, weight=1)  # spacer
+            frame.columnconfigure(2, weight=0)  # button
+            
             text = f"#{invoice_id} | {client} | Rs. {amount:.2f} | {status} | Due: {due}"
             label = ctk.CTkLabel(frame, text=text, font=ctk.CTkFont(size=15))
             label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
+            pdf_btn = ctk.CTkButton(
+                frame,
+                text="Generate PDF",
+                width=120,
+                height=28,
+                font=ctk.CTkFont(size=13),
+                fg_color="#4a9eff",
+                hover_color="#3d8bdb",
+                command=lambda inv_id=invoice_id: self.generate_invoice_pdf(inv_id)
+            )
+            pdf_btn.grid(row=0, column=2, padx=10, pady=10, sticky="e")
+
+
             frame.bind("<Button-1>", lambda e, inv_id=invoice_id: self.open_invoice_details(inv_id))
 
-        self.page_label.configure(text=f"Page {self.__current_page} / {self.__total_pages}")
+    def generate_invoice_pdf(self, invoice_id):
+        try:
+            # Fetch full invoice and client info
+            self.__cursor.execute("""
+                SELECT i.invoice_id, i.amount, i.invoice_date, i.due_date, i.description, i.status,
+                    c.name, c.email, c.phone, c.company_name
+                FROM invoices i
+                JOIN clients c ON i.client_id = c.client_id
+                WHERE i.invoice_id = %s
+            """, (invoice_id,))
+            row = self.__cursor.fetchone()
+
+            if not row:
+                print(f"[ERROR] Invoice #{invoice_id} not found.")
+                return
+
+            invoice = {
+                "invoice_id": row[0],
+                "amount": float(row[1]),
+                "invoice_date": row[2].strftime("%Y-%m-%d"),
+                "due_date": row[3].strftime("%Y-%m-%d"),
+                "description": row[4],
+                "status": row[5]
+            }
+            client = {
+                "name": row[6],
+                "email": row[7],
+                "phone": row[8],
+                "company_name": row[9]
+            }
+
+            # Ask user where to save
+            file_path = filedialog.asksaveasfilename(
+                defaultextension=".pdf",
+                filetypes=[("PDF files", "*.pdf")],
+                initialfile=f"invoice_{invoice_id}.pdf"
+            )
+
+            if file_path:
+                generate_invoice_pdf(invoice, client, file_path)
+                print(f"[INFO] PDF saved at: {file_path}")
+
+        except Exception as e:
+            print(f"[ERROR] Failed to generate PDF: {str(e)}")
+
+
 
     def prev_next_buttons(self):
         pagination_frame = ctk.CTkFrame(self, fg_color=self.__FRAME_COLOR)

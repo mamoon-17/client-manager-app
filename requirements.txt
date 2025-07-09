@@ -6,3 +6,4 @@ python-dotenv
 pytest
 pillow
 customtkinter
+secure-smtplib

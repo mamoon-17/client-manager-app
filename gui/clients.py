@@ -2,6 +2,11 @@ import customtkinter as ctk
 from customtkinter import CTkFont
 from datetime import datetime, date
 import math
+import os
+import smtplib
+from tkinter import filedialog, simpledialog, messagebox
+from email.message import EmailMessage
+
 
 class Clients(ctk.CTkFrame):
 
@@ -36,7 +41,7 @@ class Clients(ctk.CTkFrame):
         self.client_rows()
         self.prev_next_buttons()
 
-        self.refresh_client_rows()  # ✅ FIXED: move to the end of __init__
+        self.refresh_client_rows()
 
     def client_rows(self):
         self.clients_container = ctk.CTkFrame(self, fg_color=self.__FRAME_COLOR)
@@ -74,15 +79,26 @@ class Clients(ctk.CTkFrame):
             widget.destroy()
 
         clients = self.fetch_clients_for_page()
-        
+
         for i, (client_id, name, email, company) in enumerate(clients):
             client_frame = ctk.CTkFrame(self.clients_container, height=20, fg_color=self.__WIDGET_COLOR, corner_radius=10)
             client_frame.grid(row=i, column=0, sticky="ew", padx=20, pady=10)
-            self.clients_container.rowconfigure(i, weight=0)
+            client_frame.columnconfigure(0, weight=1)
+            client_frame.columnconfigure(1, weight=0)
 
             display_text = f"{name} ({company}) - {email}"
             name_label = ctk.CTkLabel(client_frame, text=display_text, font=ctk.CTkFont(size=16))
             name_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+            send_btn = ctk.CTkButton(
+                client_frame,
+                text="Send Email",
+                fg_color="#28a745",
+                hover_color="#218838",
+                width=120,
+                command=lambda email=email: self.send_email_to_client(email)
+            )
+            send_btn.grid(row=0, column=1, padx=10, pady=10, sticky="e")
 
             client_frame.bind("<Button-1>", lambda e, c_id=client_id: self.open_client_profile(c_id))
 
@@ -181,6 +197,39 @@ class Clients(ctk.CTkFrame):
 
     def inject_controller(self, controller):
         self.controller = controller
+
+    def send_email_to_client(self, to_email):
+        try:
+            pdf_path = filedialog.askopenfilename(
+                title="Select Invoice PDF",
+                filetypes=[("PDF Files", "*.pdf")]
+            )
+            if not pdf_path:
+                return
+
+            subject = simpledialog.askstring("Subject", "Enter email subject:")
+            if not subject:
+                return
+
+            msg = EmailMessage()
+            msg['Subject'] = subject
+            msg['From'] = os.getenv("GMAIL_USER")
+            msg['To'] = to_email
+            msg.set_content("Please find attached your invoice.")
+
+            with open(pdf_path, "rb") as f:
+                file_data = f.read()
+                file_name = os.path.basename(pdf_path)
+
+            msg.add_attachment(file_data, maintype="application", subtype="pdf", filename=file_name)
+
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+                smtp.login(os.getenv("GMAIL_USER"), os.getenv("GMAIL_PASS"))
+                smtp.send_message(msg)
+
+            messagebox.showinfo("Success", f"Email sent to {to_email}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to send email:\n{str(e)}")
 
     def on_Addclients_click(self):
         if self.controller:
