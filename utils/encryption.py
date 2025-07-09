@@ -1,15 +1,14 @@
-# utils/encryption.py
-
-from cryptography.fernet import Fernet
 import os
+from cryptography.fernet import Fernet
 
 KEY_FILE = "utils/secret.key"
 
 def generate_key():
-    if not os.path.exists(KEY_FILE):
+    if not os.path.exists(KEY_FILE) or os.path.getsize(KEY_FILE) == 0:
         key = Fernet.generate_key()
         with open(KEY_FILE, "wb") as f:
             f.write(key)
+
 
 def load_key():
     with open(KEY_FILE, "rb") as f:

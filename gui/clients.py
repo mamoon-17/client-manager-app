@@ -6,10 +6,10 @@ import os
 import smtplib
 from tkinter import filedialog, simpledialog, messagebox
 from email.message import EmailMessage
+from utils.encryption import decrypt_note
 
 
 class Clients(ctk.CTkFrame):
-
     def __init__(self, root, db):
         super().__init__(root)
 
@@ -40,11 +40,10 @@ class Clients(ctk.CTkFrame):
         self.search_and_sort_bar()
         self.client_rows()
         self.prev_next_buttons()
-
         self.refresh_client_rows()
 
     def client_rows(self):
-        self.clients_container = ctk.CTkFrame(self, fg_color=self.__FRAME_COLOR)
+        self.clients_container = ctk.CTkScrollableFrame(self, fg_color=self.__FRAME_COLOR)
         self.clients_container.grid(row=2, column=0, sticky="nsew", padx=60, pady=(10, 20))
         self.clients_container.columnconfigure(0, weight=1)
 
@@ -58,47 +57,81 @@ class Clients(ctk.CTkFrame):
             self.__total_clients = 0
             self.__total_pages = 1
 
-    def fetch_clients_for_page(self):
-        offset = (self.__current_page - 1) * self.__clients_per_page
-        try:
-            self.__cursor.execute("""
-                SELECT client_id, name, email, company_name 
-                FROM clients 
-                ORDER BY name ASC 
-                LIMIT %s OFFSET %s
-            """, (self.__clients_per_page, offset))
-            return self.__cursor.fetchall()
-        except Exception as e:
-            print(f"[ERROR] Failed to fetch clients: {str(e)}")
-            return []
-
     def refresh_client_rows(self):
         self.count_total_clients()
 
         for widget in self.clients_container.winfo_children():
             widget.destroy()
 
-        clients = self.fetch_clients_for_page()
+        try:
+            offset = (self.__current_page - 1) * self.__clients_per_page
+            self.__cursor.execute("""
+                SELECT client_id, name, email, company_name, notes
+                FROM clients
+                ORDER BY name ASC
+                LIMIT %s OFFSET %s
+            """, (self.__clients_per_page, offset))
+            clients = self.__cursor.fetchall()
+        except Exception as e:
+            print(f"[ERROR] Fetching clients: {e}")
+            clients = []
 
-        for i, (client_id, name, email, company) in enumerate(clients):
-            client_frame = ctk.CTkFrame(self.clients_container, height=20, fg_color=self.__WIDGET_COLOR, corner_radius=10)
+        for i, (client_id, name, email, company, encrypted_note) in enumerate(clients):
+            client_frame = ctk.CTkFrame(self.clients_container, fg_color=self.__WIDGET_COLOR, corner_radius=10)
             client_frame.grid(row=i, column=0, sticky="ew", padx=20, pady=10)
-            client_frame.columnconfigure(0, weight=1)
+            client_frame.columnconfigure(0, weight=5)
             client_frame.columnconfigure(1, weight=0)
+            client_frame.columnconfigure(2, weight=0)
 
             display_text = f"{name} ({company}) - {email}"
-            name_label = ctk.CTkLabel(client_frame, text=display_text, font=ctk.CTkFont(size=16))
-            name_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+            label = ctk.CTkLabel(client_frame, text=display_text, font=ctk.CTkFont(size=15))
+            label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+            notes_label = ctk.CTkLabel(client_frame, text="🔒 Hidden", font=ctk.CTkFont(size=13), text_color="gray")
+            notes_label.grid(row=1, column=0, columnspan=3, sticky="w", padx=10)
+
+            # create reveal button inside closure to fix variable scoping
+            def create_reveal_button(parent, enc_note, lbl):
+                btn = ctk.CTkButton(
+                    parent,
+                    text="Show Notes",
+                    width=110,
+                    height=30,
+                    font=ctk.CTkFont(size=12),
+                    fg_color="#6c757d",
+                    hover_color="#5a6268"
+                )
+
+                def toggle():
+                    if btn.cget("text") == "Show Notes":
+                        try:
+                            if enc_note:
+                                decrypted = decrypt_note(enc_note)
+                                lbl.configure(text="📝 " + decrypted)
+                            else:
+                                lbl.configure(text="No notes.")
+                            btn.configure(text="Hide Notes")
+                        except Exception:
+                            lbl.configure(text="[Decrypt Error]")
+                    else:
+                        lbl.configure(text="🔒 Hidden")
+                        btn.configure(text="Show Notes")
+
+                btn.configure(command=toggle)
+                return btn
+
+            reveal_btn = create_reveal_button(client_frame, encrypted_note, notes_label)
+            reveal_btn.grid(row=0, column=1, padx=(10, 5), pady=10, sticky="e")
 
             send_btn = ctk.CTkButton(
                 client_frame,
                 text="Send Email",
                 fg_color="#28a745",
                 hover_color="#218838",
-                width=120,
+                width=110,
                 command=lambda email=email: self.send_email_to_client(email)
             )
-            send_btn.grid(row=0, column=1, padx=10, pady=10, sticky="e")
+            send_btn.grid(row=0, column=2, padx=10, pady=10, sticky="e")
 
             client_frame.bind("<Button-1>", lambda e, c_id=client_id: self.open_client_profile(c_id))
 

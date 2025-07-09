@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from tkinter import messagebox
+from utils.encryption import encrypt_note
 
 class AddClientsPage(ctk.CTkFrame):
     def __init__(self, root, db):
@@ -20,6 +21,7 @@ class AddClientsPage(ctk.CTkFrame):
         self.__email_var = ctk.StringVar()
         self.__phone_var = ctk.StringVar()
         self.__company_var = ctk.StringVar()
+        self.__notes_var = ctk.StringVar()
 
         self.initUI()
 
@@ -43,8 +45,8 @@ class AddClientsPage(ctk.CTkFrame):
         )
         subtitle_label.grid(row=1, column=0, columnspan=2, pady=(0, 25))
 
-        labels = ["Name", "Email", "Phone", "Company Name"]
-        vars = [self.__name_var, self.__email_var, self.__phone_var, self.__company_var]
+        labels = ["Name", "Email", "Phone", "Company Name", "Notes"]
+        vars = [self.__name_var, self.__email_var, self.__phone_var, self.__company_var, self.__notes_var]
 
         for i, (label_text, var) in enumerate(zip(labels, vars)):
             row = i + 2
@@ -100,18 +102,21 @@ class AddClientsPage(ctk.CTkFrame):
         email = self.__email_var.get().strip()
         phone = self.__phone_var.get().strip()
         company = self.__company_var.get().strip()
+        notes = self.__notes_var.get().strip()
 
         if not all([name, email, phone]):
             messagebox.showwarning("Validation Error", "Please fill all required fields (Name, Email, Phone).")
             return
 
         try:
+            encrypted_notes = encrypt_note(notes) if notes else None
+
             cursor = self.__db.get_cursor()
             query = """
-                INSERT INTO clients (name, email, phone, company_name)
-                VALUES (%s, %s, %s, %s)
+                INSERT INTO clients (name, email, phone, company_name, notes)
+                VALUES (%s, %s, %s, %s, %s)
             """
-            cursor.execute(query, (name, email, phone, company or None))
+            cursor.execute(query, (name, email, phone, company or None, encrypted_notes))
             self.__db.commit()
             messagebox.showinfo("Success", "Client added successfully.")
             self.clearForm()
@@ -125,5 +130,5 @@ class AddClientsPage(ctk.CTkFrame):
         self.controller = controller
 
     def clearForm(self):
-        for var in [self.__name_var, self.__email_var, self.__phone_var, self.__company_var]:
+        for var in [self.__name_var, self.__email_var, self.__phone_var, self.__company_var, self.__notes_var]:
             var.set("")

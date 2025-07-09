@@ -19,7 +19,8 @@ class Queries:
                 name VARCHAR(100) NOT NULL,
                 email VARCHAR(100) UNIQUE NOT NULL,
                 phone VARCHAR(20) UNIQUE NOT NULL,
-                company_name VARCHAR(100)
+                company_name VARCHAR(100),
+                notes TEXT
             );
             """
             self.__cursor.execute(query)
