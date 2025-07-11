@@ -10,6 +10,7 @@ class Queries:
         self.create_invoices_table()
         self.create_activity_logs_table()
         self.create_payments_table()
+        self.create_tasks_table()  # ⬅️ ADDED
         self.apply_constraints()
 
     def create_clients_table(self):
@@ -83,6 +84,23 @@ class Queries:
         except Error as e:
             print(f"Error creating payments table: {e}")
 
+    def create_tasks_table(self):
+        try:
+            query = """
+            CREATE TABLE IF NOT EXISTS tasks (
+                task_id INT AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                priority ENUM('Low', 'Medium', 'High') NOT NULL,
+                deadline DATE NOT NULL,
+                is_starred BOOLEAN DEFAULT FALSE,
+                is_completed BOOLEAN DEFAULT FALSE
+            );
+            """
+            self.__cursor.execute(query)
+            print("Table 'tasks' created or already exists.")
+        except Error as e:
+            print(f"Error creating tasks table: {e}")
+
     def apply_constraints(self):
         try:
             self.__cursor.execute("""
@@ -133,10 +151,19 @@ class Queries:
             print(f"Error fetching recent activities: {e}")
             return []
 
+    def log_activity(self, activity_type, description, client_id=None):
+        try:
+            query = """
+            INSERT INTO activity_logs (activity_type, description, client_id)
+            VALUES (%s, %s, %s)
+            """
+            self.__cursor.execute(query, (activity_type, description, client_id))
+            self.__conn.commit()
+            print("Activity logged.")
+        except Error as e:
+            print(f"Error logging activity: {e}")
+
     def close(self):
         if self.__cursor:
             self.__cursor.close()
             print("Cursor closed.")
-
-    def __del__(self):
-        self.close()

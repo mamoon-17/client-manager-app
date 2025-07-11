@@ -118,6 +118,14 @@ class AddClientsPage(ctk.CTkFrame):
             """
             cursor.execute(query, (name, email, phone, company or None, encrypted_notes))
             self.__db.commit()
+
+            # ✅ Log activity
+            self.__db._DB__queries.log_activity(
+                activity_type="Client Added",
+                description=f"Added client '{name}'",
+                client_id=cursor.lastrowid
+            )
+
             messagebox.showinfo("Success", "Client added successfully.")
             self.clearForm()
             self.controller.get_page("clients").refresh_client_rows()

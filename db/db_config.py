@@ -64,5 +64,3 @@ class DB:
             self.__connection.close()
             print("Connection closed")
 
-    def __del__(self):
-        self.close()

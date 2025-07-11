@@ -189,44 +189,46 @@ class Dashboard(ctk.CTkFrame):
         )
         self.__recentActivity_frame.grid(row=0, column=1, padx=(10, 0), sticky="nsew")
         self.__recentActivity_frame.grid_propagate(False)
-        self.__recentActivity_frame.rowconfigure(0, weight=1)
-        self.__recentActivity_frame.columnconfigure(1, weight=1)
-        self.RecentActivityLabel()
 
-    def RecentActivityLabel(self):
-        self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=30)
+        content_wrapper = ctk.CTkFrame(self.__recentActivity_frame, fg_color="transparent")
+        content_wrapper.grid(row=0, column=0, sticky="nw", padx=60, pady=40)
+
+        content_wrapper.grid_columnconfigure(0, weight=1)
 
         title_label = ctk.CTkLabel(
-            self.__recentActivity_frame,
+            content_wrapper,
             text="Recent Activity",
-            font=self.__labelsemi_bold_font,
+            font=CTkFont(family="Raleway SemiBold", size=30),
             text_color="white"
+          
         )
-        title_label.grid(row=0, column=0, sticky="nw", padx=30, pady=(20, 5))
+        title_label.grid(row=0, column=0, sticky="w", padx=0, pady=(0, 50))
+
 
         activities = self.__db._DB__queries.get_recent_activities(limit=3)
 
         for i, activity in enumerate(activities):
             label = ctk.CTkLabel(
-                self.__recentActivity_frame,
+                content_wrapper,
                 text=f"{activity[0]} - {activity[1]}",
                 font=ctk.CTkFont(size=18),
                 text_color="white"
             )
-            label.grid(row=i+1, column=0, sticky="nw", padx=30)
+            label.grid(row=i+1, column=0, sticky="w", padx=0)
 
         view_all_btn = ctk.CTkButton(
-            self.__recentActivity_frame,
+            content_wrapper,
             text="View All",
             font=ctk.CTkFont(size=14),
-            fg_color="white",
-            text_color="black",
-            corner_radius=10,
-            hover_color="#cccccc",
+            fg_color="#623d40",
+            hover_color="#555",
+            text_color="white",
+            corner_radius=8,
+            height=32,
+            width=100,
             command=lambda: self.controller.show_page("activity_log")
-
         )
-        view_all_btn.grid(row=4, column=0, sticky="se", padx=30, pady=(10, 10))
+        view_all_btn.grid(row=5, column=0, sticky="w", pady=(12, 0))
 
     def initBottomframe(self):
         self.__bottom_frame = ctk.CTkFrame(self, fg_color=self.__FRAME_COLOR, corner_radius=15)
@@ -265,13 +267,15 @@ class Dashboard(ctk.CTkFrame):
 
         add_payment_btn = ctk.CTkButton(
             self.__bottom_frame,
-            text="Add Payment",
+            text="Tasks List",
             font=CTkFont(family="Raleway SemiBold", size=30),
             fg_color=self.__WIDGET_COLOR,
             hover_color="#3a3d44",
             text_color="white",
             corner_radius=15,
             height=220,
-            command=lambda: self.controller.show_page("payments")
+            command=lambda: self.controller.show_page("tasks")
         )
         add_payment_btn.grid(row=0, column=2, padx=(10, 0), pady=0, sticky="nsew")
+
+

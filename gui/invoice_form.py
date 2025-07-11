@@ -177,6 +177,10 @@ class AddInvoicesPage(ctk.CTkFrame):
                 self.__status_var.get().strip()
             ))
             self.__db.commit()
+
+            # ✅ Activity Log
+            self.__db._DB__queries.log_activity("Invoice Created", f"Invoice added for Client ID {client_id}")
+
             messagebox.showinfo("Success", "Invoice added successfully.")
             self.clearForm()
             self.controller.get_page("invoices").refresh_invoice_rows()

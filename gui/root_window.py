@@ -16,7 +16,6 @@ class Root:
         # Root window
         self.__root = ctk.CTk()
         self.__root.title("Client Manager")
-        
         self.__root.state("zoomed")
 
         screen_width = self.__root.winfo_screenwidth()
@@ -43,88 +42,85 @@ class Root:
         self.DashboardButton()
         self.ClientButton()
         self.InvoiceButton()
-        # self.PaymentButton()  
+        self.TasksButton()  # ✅ Tasks button instead of payments
         self.addSidebarSeparator()
-        self.QuitButton()  
+        self.QuitButton()
+
     def DashboardButton(self):
         self.__semi_bold_font = CTkFont(family="Raleway SemiBold", size=24)
-
         dashboard_Button = ctk.CTkButton(
-        self.__sidebar_frame,
-        text="Dashboard",
-        font=self.__semi_bold_font,
-        fg_color=self.__SIDEBAR_COLOR,            # Button background
-        text_color="white",          # Text color
-        hover_color="#3b4147",       # Optional: hover effect
-        corner_radius=10,
-        height=60,
-        width=210,
-        command=self.on_dashboard_click
+            self.__sidebar_frame,
+            text="Dashboard",
+            font=self.__semi_bold_font,
+            fg_color=self.__SIDEBAR_COLOR,
+            text_color="white",
+            hover_color="#3b4147",
+            corner_radius=10,
+            height=60,
+            width=210,
+            command=self.on_dashboard_click
         )
         dashboard_Button.grid(row=0, column=0, sticky="n", padx=10, pady=(50, 10))
 
     def ClientButton(self):
-        dashboard_Button = ctk.CTkButton(
-        self.__sidebar_frame,
-        text="Clients",
-        font=self.__semi_bold_font,
-        fg_color=self.__SIDEBAR_COLOR,            # Button background
-        text_color="white",          # Text color
-        hover_color="#3b4147",       # Optional: hover effect
-        corner_radius=10,
-        height=60,
-        width=210,
-        command=self.on_clients_click
+        client_button = ctk.CTkButton(
+            self.__sidebar_frame,
+            text="Clients",
+            font=self.__semi_bold_font,
+            fg_color=self.__SIDEBAR_COLOR,
+            text_color="white",
+            hover_color="#3b4147",
+            corner_radius=10,
+            height=60,
+            width=210,
+            command=self.on_clients_click
         )
-        dashboard_Button.grid(row=1, column=0, sticky="n", padx=10, pady=10)
+        client_button.grid(row=1, column=0, sticky="n", padx=10, pady=10)
 
     def InvoiceButton(self):
         invoice_button = ctk.CTkButton(
-        self.__sidebar_frame,
-        text="Invoices",
-        font=self.__semi_bold_font,
-        fg_color=self.__SIDEBAR_COLOR,            # Button background
-        text_color="white",          # Text color
-        hover_color="#3b4147",       # Optional: hover effect
-        corner_radius=10,
-        height=60,
-        width=210,
-        command=self.on_invoices_click
+            self.__sidebar_frame,
+            text="Invoices",
+            font=self.__semi_bold_font,
+            fg_color=self.__SIDEBAR_COLOR,
+            text_color="white",
+            hover_color="#3b4147",
+            corner_radius=10,
+            height=60,
+            width=210,
+            command=self.on_invoices_click
         )
         invoice_button.grid(row=2, column=0, sticky="n", padx=10, pady=10)
 
-    def PaymentButton(self):
-        dashboard_Button = ctk.CTkButton(
-        self.__sidebar_frame,
-        text="Payments",
-        font=self.__semi_bold_font,
-        fg_color=self.__SIDEBAR_COLOR,            # Button background
-        text_color="white",          # Text color
-        hover_color="#3b4147",       # Optional: hover effect
-        corner_radius=10,
-        height=60,
-        width=210,
-        command=self.on_payments_click
-
+    def TasksButton(self):  # ✅ New method for tasks list
+        tasks_button = ctk.CTkButton(
+            self.__sidebar_frame,
+            text="Tasks List",
+            font=self.__semi_bold_font,
+            fg_color=self.__SIDEBAR_COLOR,
+            text_color="white",
+            hover_color="#3b4147",
+            corner_radius=10,
+            height=60,
+            width=210,
+            command=self.on_tasks_click
         )
-        dashboard_Button.grid(row=3, column=0, sticky="n", padx=10, pady=10)
+        tasks_button.grid(row=3, column=0, sticky="n", padx=10, pady=10)
+
     def QuitButton(self):
         quit_button = ctk.CTkButton(
             self.__sidebar_frame,
-            text="⏻ Quit",  
+            text="⏻ Quit",
             font=self.__semi_bold_font,
-            fg_color=self.__SIDEBAR_COLOR,       
+            fg_color=self.__SIDEBAR_COLOR,
             text_color="white",
-            hover_color="#3b4147",               
+            hover_color="#3b4147",
             corner_radius=10,
             height=60,
             width=210,
             command=self.quit_app
         )
         quit_button.grid(row=4, column=0, sticky="n", padx=10, pady=(10, 10))
-
-
-
 
     def addSidebarSeparator(self):
         separator = ctk.CTkLabel(
@@ -133,10 +129,6 @@ class Root:
             text_color="#555"
         )
         separator.grid(row=3, column=0, pady=(10, 5))
-
-
-
-
 
     def inject_controller(self, controller):
         self.controller = controller
@@ -153,14 +145,12 @@ class Root:
         if self.controller:
             self.controller.show_page("clients")
 
-    def on_payments_click(self):
+    def on_tasks_click(self):  # ✅ Routing logic for tasks
         if self.controller:
-            self.controller.show_page("payments")
+            self.controller.show_page("tasks")
 
     def quit_app(self):
         self.__root.destroy()
-
-
 
     def get_root(self):
         return self.__root
