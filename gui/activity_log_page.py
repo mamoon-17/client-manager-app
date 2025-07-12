@@ -5,17 +5,19 @@ class ActivityLogPage(ctk.CTkFrame):
     def __init__(self, root, db):
         super().__init__(root)
         self.__db = db
+        self.controller = None
+
         self.configure(fg_color="#23262b")
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        title = ctk.CTkLabel(
+        self.title_label = ctk.CTkLabel(
             self,
             text="All Activity Logs",
             font=CTkFont(family="Raleway SemiBold", size=34),
             text_color="white"
         )
-        title.grid(row=0, column=0, pady=20)
+        self.title_label.grid(row=0, column=0, pady=20)
 
         self.scrollable_frame = ctk.CTkScrollableFrame(
             self,
@@ -23,10 +25,15 @@ class ActivityLogPage(ctk.CTkFrame):
             corner_radius=10
         )
         self.scrollable_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=10)
+        
+        self.refresh_logs()
 
-        self.populate_logs()
+    def refresh_logs(self):
+        # Clear old widgets first
+        for widget in self.scrollable_frame.winfo_children():
+            widget.destroy()
 
-    def populate_logs(self):
+        # Fetch updated activity logs
         activities = self.__db.get_queries().get_recent_activities(limit=100)
 
         if not activities:
@@ -34,7 +41,7 @@ class ActivityLogPage(ctk.CTkFrame):
             no_data.pack(pady=10)
             return
 
-        for i, (activity_type, desc) in enumerate(activities):
+        for activity_type, desc in activities:
             log = ctk.CTkLabel(
                 self.scrollable_frame,
                 text=f"{activity_type}: {desc}",
@@ -45,6 +52,6 @@ class ActivityLogPage(ctk.CTkFrame):
                 justify="left"
             )
             log.pack(fill="x", padx=10, pady=5)
+
     def inject_controller(self, controller):
         self.controller = controller
-

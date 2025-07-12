@@ -178,17 +178,22 @@ class AddInvoicesPage(ctk.CTkFrame):
             ))
             self.__db.commit()
 
-            # ✅ Activity Log
+         
             self.__db._DB__queries.log_activity("Invoice Created", f"Invoice added for Client ID {client_id}")
 
             messagebox.showinfo("Success", "Invoice added successfully.")
             self.clearForm()
-            self.controller.get_page("invoices").refresh_invoice_rows()
+
+         
+            invoices_page = self.controller.get_page("invoices")
+            invoices_page._InvoicesPage__current_page = 1
+            invoices_page.apply_filters()
             self.controller.show_page("invoices")
 
         except Exception as e:
             self.__db.rollback()
             messagebox.showerror("Database Error", f"Error creating invoice: {str(e)}")
+
 
     def inject_controller(self, controller):
         self.controller = controller

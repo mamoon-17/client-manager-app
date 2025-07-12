@@ -42,7 +42,7 @@ class Root:
         self.DashboardButton()
         self.ClientButton()
         self.InvoiceButton()
-        self.TasksButton()  # ✅ Tasks button instead of payments
+        # self.TasksButton()  # ✅ Tasks button instead of payments
         self.addSidebarSeparator()
         self.QuitButton()
 
@@ -92,20 +92,20 @@ class Root:
         )
         invoice_button.grid(row=2, column=0, sticky="n", padx=10, pady=10)
 
-    def TasksButton(self):  # ✅ New method for tasks list
-        tasks_button = ctk.CTkButton(
-            self.__sidebar_frame,
-            text="Tasks List",
-            font=self.__semi_bold_font,
-            fg_color=self.__SIDEBAR_COLOR,
-            text_color="white",
-            hover_color="#3b4147",
-            corner_radius=10,
-            height=60,
-            width=210,
-            command=self.on_tasks_click
-        )
-        tasks_button.grid(row=3, column=0, sticky="n", padx=10, pady=10)
+    # def TasksButton(self):  # ✅ New method for tasks list
+    #     tasks_button = ctk.CTkButton(
+    #         self.__sidebar_frame,
+    #         text="Tasks List",
+    #         font=self.__semi_bold_font,
+    #         fg_color=self.__SIDEBAR_COLOR,
+    #         text_color="white",
+    #         hover_color="#3b4147",
+    #         corner_radius=10,
+    #         height=60,
+    #         width=210,
+    #         command=self.on_tasks_click
+    #     )
+    #     tasks_button.grid(row=3, column=0, sticky="n", padx=10, pady=10)
 
     def QuitButton(self):
         quit_button = ctk.CTkButton(
@@ -145,9 +145,9 @@ class Root:
         if self.controller:
             self.controller.show_page("clients")
 
-    def on_tasks_click(self):  # ✅ Routing logic for tasks
-        if self.controller:
-            self.controller.show_page("tasks")
+    # def on_tasks_click(self):  # ✅ Routing logic for tasks
+    #     if self.controller:
+    #         self.controller.show_page("tasks")
 
     def quit_app(self):
         self.__root.destroy()

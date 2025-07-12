@@ -8,20 +8,11 @@ class Dashboard(ctk.CTkFrame):
         self.__db = db
         self.__root = root
 
-        # Frame containers
-        self.__top_frame = None
-        self.__middle_frame = None
-        self.__bottom_frame = None
-        self.__totalClients_frame = None
-        self.__totalInvoices_frame = None
-        self.__paidInvoices_frame = None
-        self.__recentActivity_frame = None
+        self.controller = None  # Controller injection
 
-        # Colors
         self.__WIDGET_COLOR = "#303339"
         self.__FRAME_COLOR = "#23262b"
 
-        # Layout
         self.grid(row=0, column=1, sticky="nsew")
         self.configure(fg_color=self.__FRAME_COLOR, corner_radius=0)
         self.rowconfigure(0, weight=1)
@@ -35,6 +26,13 @@ class Dashboard(ctk.CTkFrame):
 
     def inject_controller(self, controller):
         self.controller = controller
+
+    def refresh_dashboard(self):
+        """Refresh dashboard stats & activity feed"""
+        self.totalClientsLabel()
+        self.totalInvoicesLabel()
+        self.refreshPaidInvoices()
+        self.refreshRecentActivity()
 
     def initTopframe(self):
         self.__top_frame = ctk.CTkFrame(self, fg_color=self.__FRAME_COLOR, corner_radius=15)
@@ -62,13 +60,14 @@ class Dashboard(ctk.CTkFrame):
         self.totalClientsLabel()
 
     def totalClientsLabel(self):
-        self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=32)
-        total = self.__db._DB__queries.get_total_clients()
+        for widget in self.__totalClients_frame.winfo_children():
+            widget.destroy()
 
+        total = self.__db._DB__queries.get_total_clients()
         label = ctk.CTkLabel(
             self.__totalClients_frame,
             text="Total Clients",
-            font=self.__labelsemi_bold_font,
+            font=CTkFont(family="Raleway SemiBold", size=32),
             text_color="white",
             height=150
         )
@@ -97,13 +96,14 @@ class Dashboard(ctk.CTkFrame):
         self.totalInvoicesLabel()
 
     def totalInvoicesLabel(self):
-        self.__labelsemi_bold_font = CTkFont(family="Raleway SemiBold", size=32)
-        total = self.__db._DB__queries.get_total_invoices()
+        for widget in self.__totalInvoices_frame.winfo_children():
+            widget.destroy()
 
+        total = self.__db._DB__queries.get_total_invoices()
         label = ctk.CTkLabel(
             self.__totalInvoices_frame,
             text="Total Invoices",
-            font=self.__labelsemi_bold_font,
+            font=CTkFont(family="Raleway SemiBold", size=32),
             text_color="white",
             height=150
         )
@@ -142,9 +142,13 @@ class Dashboard(ctk.CTkFrame):
         self.__paidInvoices_frame.columnconfigure(1, weight=1)
         self.__paidInvoices_frame.rowconfigure(0, weight=1)
         self.__paidInvoices_frame.rowconfigure(1, weight=1)
+        self.refreshPaidInvoices()
+
+    def refreshPaidInvoices(self):
+        for widget in self.__paidInvoices_frame.winfo_children():
+            widget.destroy()
 
         total_paid = self.__db._DB__queries.get_paid_invoices()
-
         label = ctk.CTkLabel(
             self.__paidInvoices_frame,
             text="Paid Invoices",
@@ -189,10 +193,14 @@ class Dashboard(ctk.CTkFrame):
         )
         self.__recentActivity_frame.grid(row=0, column=1, padx=(10, 0), sticky="nsew")
         self.__recentActivity_frame.grid_propagate(False)
+        self.refreshRecentActivity()
+
+    def refreshRecentActivity(self):
+        for widget in self.__recentActivity_frame.winfo_children():
+            widget.destroy()
 
         content_wrapper = ctk.CTkFrame(self.__recentActivity_frame, fg_color="transparent")
         content_wrapper.grid(row=0, column=0, sticky="nw", padx=60, pady=40)
-
         content_wrapper.grid_columnconfigure(0, weight=1)
 
         title_label = ctk.CTkLabel(
@@ -200,13 +208,10 @@ class Dashboard(ctk.CTkFrame):
             text="Recent Activity",
             font=CTkFont(family="Raleway SemiBold", size=30),
             text_color="white"
-          
         )
         title_label.grid(row=0, column=0, sticky="w", padx=0, pady=(0, 50))
 
-
         activities = self.__db._DB__queries.get_recent_activities(limit=3)
-
         for i, activity in enumerate(activities):
             label = ctk.CTkLabel(
                 content_wrapper,
@@ -277,5 +282,3 @@ class Dashboard(ctk.CTkFrame):
             command=lambda: self.controller.show_page("tasks")
         )
         add_payment_btn.grid(row=0, column=2, padx=(10, 0), pady=0, sticky="nsew")
-
-
