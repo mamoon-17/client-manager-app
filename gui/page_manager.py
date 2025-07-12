@@ -22,6 +22,7 @@ class PageManager:
             if "dashboard" not in self.pages:
                 self.pages["dashboard"] = Dashboard(self.root, self.db)
                 self.pages["dashboard"].inject_controller(self)
+            self.pages["dashboard"].refresh_dashboard()  # ← refresh data every time
             self.pages["dashboard"].grid(row=0, column=1, sticky="nsew")
 
         elif name == "invoices":

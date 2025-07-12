@@ -193,6 +193,8 @@ class Dashboard(ctk.CTkFrame):
         )
         self.__recentActivity_frame.grid(row=0, column=1, padx=(10, 0), sticky="nsew")
         self.__recentActivity_frame.grid_propagate(False)
+        self.__recentActivity_frame.rowconfigure(0, weight=1)
+        self.__recentActivity_frame.columnconfigure(0, weight=1)
         self.refreshRecentActivity()
 
     def refreshRecentActivity(self):
@@ -200,7 +202,7 @@ class Dashboard(ctk.CTkFrame):
             widget.destroy()
 
         content_wrapper = ctk.CTkFrame(self.__recentActivity_frame, fg_color="transparent")
-        content_wrapper.grid(row=0, column=0, sticky="nw", padx=60, pady=40)
+        content_wrapper.grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
         content_wrapper.grid_columnconfigure(0, weight=1)
 
         title_label = ctk.CTkLabel(
@@ -209,9 +211,10 @@ class Dashboard(ctk.CTkFrame):
             font=CTkFont(family="Raleway SemiBold", size=30),
             text_color="white"
         )
-        title_label.grid(row=0, column=0, sticky="w", padx=0, pady=(0, 50))
+        title_label.grid(row=0, column=0, sticky="w", pady=(0, 10))
 
-        activities = self.__db._DB__queries.get_recent_activities(limit=3)
+        activities = self.__db._DB__queries.get_recent_activities(limit=2)
+
         for i, activity in enumerate(activities):
             label = ctk.CTkLabel(
                 content_wrapper,
@@ -219,7 +222,7 @@ class Dashboard(ctk.CTkFrame):
                 font=ctk.CTkFont(size=18),
                 text_color="white"
             )
-            label.grid(row=i+1, column=0, sticky="w", padx=0)
+            label.grid(row=i + 1, column=0, sticky="w", pady=(0, 6))
 
         view_all_btn = ctk.CTkButton(
             content_wrapper,
@@ -233,7 +236,7 @@ class Dashboard(ctk.CTkFrame):
             width=100,
             command=lambda: self.controller.show_page("activity_log")
         )
-        view_all_btn.grid(row=5, column=0, sticky="w", pady=(12, 0))
+        view_all_btn.grid(row=len(activities) + 2, column=0, sticky="w", pady=(10, 0))
 
     def initBottomframe(self):
         self.__bottom_frame = ctk.CTkFrame(self, fg_color=self.__FRAME_COLOR, corner_radius=15)
