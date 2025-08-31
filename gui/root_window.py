@@ -16,7 +16,15 @@ class Root:
         # Root window
         self.__root = ctk.CTk()
         self.__root.title("Client Manager")
-        self.__root.state("zoomed")
+        import sys
+        # Cross-platform window maximization
+        try:
+            if sys.platform.startswith("win"):
+                self.__root.state("zoomed")  # Windows
+            else:
+                self.__root.attributes("-zoomed", True)  # Linux/macOS
+        except Exception:
+            self.__root.attributes("-zoomed", True)
 
         screen_width = self.__root.winfo_screenwidth()
         screen_height = self.__root.winfo_screenheight() - 70

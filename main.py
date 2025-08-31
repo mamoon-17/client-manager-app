@@ -5,7 +5,10 @@ from db.db_config import DB
 if __name__ == "__main__":
     db = DB()
     connection = db.get_connection()
-    
+    if not connection:
+        print("Failed to connect to the database. Exiting.")
+        exit(1)
+
     root = Root()
     controller = PageManager(root.get_root(), db)
 
